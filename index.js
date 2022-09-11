@@ -72,7 +72,7 @@ for(const file of fileComandiModerazione){
 
 //bot pronto
 require('./Handlers/Events')(client);
-require('../Rider/Handlers/Commands')(client);
+//require('../Rider/Handlers/Commands')(client);
 client.once('ready',async()=>{
     console.log(`GhostR® è online!`);
     client.user.setActivity(`/help in ${client.guilds.cache.size} ${client.guilds.cache.size>1?'Servers':'Server'}`,{type:'LISTENING' })
