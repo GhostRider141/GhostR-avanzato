@@ -7,9 +7,9 @@ const messaggio=require('./utility/messaggio');
 const reactionRlole=require('./utility/reactionRole');
 const {QuickDB} = require('quick.db');
 const db=new QuickDB()
-const {registerFont}=require('canvas')
+/* const {registerFont}=require('canvas')
 registerFont('./font/Doctor Glitch.otf',{family:'glich'})
-registerFont('./font/Burn.otf',{family:'fire'})
+registerFont('./font/Burn.otf',{family:'fire'}) */
 
 //set database quick.db
 const server=db.table('server')
@@ -74,7 +74,7 @@ for(const file of fileComandiModerazione){
 require('./Handlers/Events')(client);
 require('../Rider/Handlers/Commands')(client);
 client.once('ready',async()=>{
-    console.log(`${client.user.tag} è online!`);
+    console.log(`GhostR® è online!`);
     client.user.setActivity(`/help in ${client.guilds.cache.size} ${client.guilds.cache.size>1?'Servers':'Server'}`,{type:'LISTENING' })
     //client.user.setStatus('invisible')
 
