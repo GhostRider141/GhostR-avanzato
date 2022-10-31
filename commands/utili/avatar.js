@@ -24,14 +24,24 @@ module.exports = {
                 name: client.user.username,
                 iconURL: client.user.displayAvatarURL()
             })
-            .setTitle(`L'avatar di \`\`\`${target.tag}\`\`\``)
-            .setImage(target.displayAvatarURL({ dynamic: true, size: 256 }))
             .setFooter({
                 text: `Richiesto da: ${requester.tag}`,
                 iconURL: requester.displayAvatarURL()
             })
-            .setColor(target.displayHexColor)
 
-        await interaction.reply({embeds:[avatarEmbed]});
+            if(!target){
+                interaction.reply({ embeds: [avatarEmbed
+                    .setTitle(`L'avatar di \`\`\`${target.username}\`\`\``)
+                    .setImage(interaction.guild.members.cache.get(target.id).displayAvatarURL({ dynamic: true, size: 256 }))
+                    .setColor(target.displayHexColor)
+                ]})
+            }else{
+                const targett = interaction.guild.members.cache.get(target.id)
+                interaction.reply({ embeds: [avatarEmbed
+                    .setTitle(`L'avatar di \`\`\`${targett.user.tag}\`\`\``)
+                    .setImage(targett.displayAvatarURL({ dynamic: true, size: 256 }))
+                    .setColor(targett.displayHexColor)
+                ]})
+            }
     }
 }

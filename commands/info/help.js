@@ -30,6 +30,10 @@ module.exports={
                     name:'members',
                     value:'members'
                 },
+                {
+                    name:'network',
+                    value:'network'
+                },
             ]
         },
     ],
@@ -53,26 +57,34 @@ module.exports={
             embedhelp.setDescription('**Comandi utili:**')
         }else if(help=='info'){
             let file;
-            const fileComandiUtili=fs.readdirSync(`./commands/info`).filter(file=>file.endsWith('.js'));
-            fileComandiUtili.map((c)=>{
+            const fileComandiInfo=fs.readdirSync(`./commands/info`).filter(file=>file.endsWith('.js'));
+            fileComandiInfo.map((c)=>{
                 file=require(`../info/${c}`)
                 embedhelp.addField(`\`${file.name}\` :`,`${file.description}`)
             })
             embedhelp.setDescription('**Informazioni:**')
         }else if(help=='mod'){
             let file;
-            const fileComandiUtili=fs.readdirSync(`./commands/moderazione`).filter(file=>file.endsWith('.js'));
-            fileComandiUtili.map((c)=>{
+            const fileComandiMod=fs.readdirSync(`./commands/moderazione`).filter(file=>file.endsWith('.js'));
+            fileComandiMod.map((c)=>{
                 file=require(`../moderazione/${c}`)
                 embedhelp.addField(`\`${file.name}\` :`,`${file.description}`)
             })
             embedhelp.setDescription('**Moderazione:**')
+        }else if(help=='network'){
+            let file;
+            const fileComandiMod=fs.readdirSync(`./commands/network`).filter(file=>file.endsWith('.js'));
+            fileComandiMod.map((c)=>{
+                file=require(`../network/${c}`)
+                embedhelp.addField(`\`${file.name}\` :`,`${file.description}`)
+            })
+            embedhelp.setDescription('**Network chat:**')
         }else if(help=='members'){
             embedhelp.addField('Conteggio membri',`
-            per resettare fai: \`${prefix}config members none\`
-            per settare il canale per i membri totali fai: \`${prefix}config members membri (id canale)\`
-            per settare il canale per i utenti fai: \`${prefix}config members utenti (id canale)\`
-            per settare il canale per i bot fai: \`${prefix}config members bot (id canale)\`
+            per resettare fai: \`/config members-(bot,membri,utenti)\`
+            per settare il canale per i membri totali fai: \`/config members-membri (id canale)\`
+            per settare il canale per i utenti fai: \`/config members-utenti (id canale)\`
+            per settare il canale per i bot fai: \`/config members-bot (id canale)\`
             `)
         }else{
             embedhelp.addField('**Lista dei comandi del bot**',`

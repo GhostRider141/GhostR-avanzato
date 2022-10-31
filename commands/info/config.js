@@ -15,26 +15,26 @@ module.exports={
             type: 'SUB_COMMAND',
         },
         {
-            name: 'partner-here',
-            description: 'congigura il ping here per la partership',
+            name: 'partner',
+            description: 'congigura il canale delle partner',
             type: 'SUB_COMMAND',
             options:[
                 {
-                    name: 'membri',
-                    description: 'Specifica il numero dei membri',
-                    type: 'INTEGER',
+                    name: 'canale',
+                    description: 'Specifica il canale',
+                    type: 'CHANNEL',
                 },
             ],
         },
         {
-            name: 'partner-everyone',
-            description: 'congigura il ping everyone per la partership',
+            name: 'partner-bot',
+            description: 'congigura il canale del comando delle partner',
             type: 'SUB_COMMAND',
             options:[
                 {
-                    name: 'membri',
-                    description: 'Specifica il numero dei membri',
-                    type: 'INTEGER',
+                    name: 'canale',
+                    description: 'Specifica il canale',
+                    type: 'CHANNEL',
                 },
             ],
         },
@@ -363,12 +363,12 @@ module.exports={
                     value:`**setting**`
                 },
                 {
-                    name:`\`${this.name} partner-here (numero membri)\``,
-                    value:`per configurare il ping di here per la partnership`
+                    name:`\`${this.name} partner (menziona il canale)\``,
+                    value:`per configurare il canale per la partnership`
                 },
                 {
-                    name:`\`${this.name} partner-everyone (numero membri)\``,
-                    value:`per configurare il ping di everyone per la partnership`
+                    name:`\`${this.name} partner-bot (menziona il canale)\``,
+                    value:`per configurare il canale per il comando partnership`
                 },
                 {
                     name:`\u200b`,
@@ -469,41 +469,10 @@ module.exports={
             )
             interaction.reply({embeds:[embedConfig],components:[]})
         }
-        console.log(interaction)
-
-        //setting
-        let herePartner=await db.get(`hereP_${interaction.guild.id}`)
-        let everyonePartner=await db.get(`everyoneP_${interaction.guild.id}`)
-        if(interaction.options.getSubcommand()==='partner-here') {
-            var here=interaction.options.getInteger('membri')
-            if(!here){
-                await db.delete(`hereP_${interaction.guild.id}`)
-                embedConfig.setDescription('Ho resettato il setting del ping here impostato')
-                interaction.reply({embeds:[embedConfig],components:[],ephemeral:true})
-            } else{
-                var here=interaction.options.getInteger('membri')
-                if(!interaction.options) interaction.reply({embeds:[embedConfig.setDescription('Se vuoi settare il ping here devi mettere il numero dei membri che il server deve avere per esseere pingato')],components:[],ephemeral:true})
-                
-                herePartner=await db.set(`hereP_${interaction.guild.id}`,here)
-                interaction.reply({embeds:[embedConfig.setDescription(`Hai settato il ping here: ${herePartner}`)],components:[],ephemeral:true});
-            }
-        }
-        if(interaction.options.getSubcommand()==='partner-everyone') {
-            var everyone=interaction.options.getInteger('membri')
-            if(!everyone){
-                await db.delete(`everyoneP_${interaction.guild.id}`)
-                embedConfig.setDescription('Ho resettato il setting del ping everyone impostato')
-                interaction.reply({embeds:[embedConfig],components:[],ephemeral:true})
-            } else{
-                var everyone=interaction.options.getInteger('membri')
-                if(!interaction.options) interaction.reply({embeds:[embedConfig.setDescription('Se vuoi settare il ping everyone devi mettere il numero dei membri che il server deve avere per esseere pingato')],components:[],ephemeral:true})
-                
-                everyonePartner=await db.set(`everyoneP_${interaction.guild.id}`,everyone)
-                interaction.reply({embeds:[embedConfig.setDescription(`Hai settato il ping here: ${everyonePartner}`)],components:[],ephemeral:true});
-            }
-        }
 
         //canali
+        let partner=await db.get(`partner_${interaction.guild.id}`)
+        let partnerBot=await db.get(`partnerBot_${interaction.guild.id}`)
         let log=await db.get(`log_${interaction.guild.id}`)
         let welcome=await db.get(`welcome_${interaction.guild.id}`)
         let memmbriTOT=await db.get(`membri-tot_${interaction.guild.id}`)
@@ -518,6 +487,36 @@ module.exports={
         let ticket=await db.get(`ticket_${interaction.guild.id}`)
         let ticketCategory=await db.get(`ticket-channel_${interaction.guild.id}`)
         let eta=await db.get(`eta_${interaction.guild.id}`)
+        if(interaction.options.getSubcommand()==='partner-bot') {
+            var channelSet=interaction.options.getChannel('canale')
+            if(!channelSet){
+                await db.delete(`partnerBot_${interaction.guild.id}`)
+                embedConfig.setDescription('Ho tirato via il canale per i comandi partner impostato')
+                interaction.reply({embeds:[embedConfig],components:[],ephemeral:true})
+            } else{
+                var channelSet=interaction.options.getChannel('canale')
+                var newchannel=channelSet.id;
+                if(!interaction.options) interaction.reply({embeds:[embedConfig.setDescription('Se vuoi cambiare il canale devi **menzionare il canale** o setterlo a **none**')],components:[],ephemeral:true})
+                
+                partnerBot=await db.set(`partnerBot_${interaction.guild.id}`,newchannel)
+                interaction.reply({embeds:[embedConfig.setDescription(`Hai settato il canale  per i comandi  partner: <#${partnerBot}>`)],components:[],ephemeral:true});
+            }
+        }
+        if(interaction.options.getSubcommand()==='partner') {
+            var channelSet=interaction.options.getChannel('canale')
+            if(!channelSet){
+                await db.delete(`partner_${interaction.guild.id}`)
+                embedConfig.setDescription('Ho tirato via il canale partner impostato')
+                interaction.reply({embeds:[embedConfig],components:[],ephemeral:true})
+            } else{
+                var channelSet=interaction.options.getChannel('canale')
+                var newchannel=channelSet.id;
+                if(!interaction.options) interaction.reply({embeds:[embedConfig.setDescription('Se vuoi cambiare il canale devi **menzionare il canale** o setterlo a **none**')],components:[],ephemeral:true})
+                
+                partner=await db.set(`partner_${interaction.guild.id}`,newchannel)
+                interaction.reply({embeds:[embedConfig.setDescription(`Hai settato il canale delle partner: <#${partner}>`)],components:[],ephemeral:true});
+            }
+        }
         if(interaction.options.getSubcommand()==='log') {
             var channelSet=interaction.options.getChannel('canale')
             if(!channelSet){

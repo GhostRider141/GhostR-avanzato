@@ -49,6 +49,7 @@ db.set('voto10',0)
 //INIZIO
 const client=new Client({intents:32767 });
 client.commands=new Collection();
+client.slashcmds=new Collection();
 client.cooldowns=new Collection();
 
 
@@ -72,6 +73,7 @@ for(const file of fileComandiModerazione){
 
 //bot pronto
 require('./Handlers/Events')(client);
+require('./Handlers/Commands')(client);
 client.once('ready',async()=>{
     console.log(`GhostR® è online!`);
     client.user.setActivity(`/help in ${client.guilds.cache.size} ${client.guilds.cache.size>1?'Servers':'Server'}`,{type:'LISTENING' })
@@ -86,7 +88,7 @@ client.once('ready',async()=>{
         iconURL:client.user.displayAvatarURL()
     })
     .addField('Online','🟢')
-    canaleReady.send({embeds:[embed]})
+    //canaleReady.send({embeds:[embed]})
 
     //Registro comandi
     client.guilds.cache.forEach((guild)=>{
@@ -100,6 +102,8 @@ client.once('ready',async()=>{
     //messaggio(client,config.idCanali.prova,config.testoMessaggio,config.reazioni);
     //reactionRlole(client);
 })
+
+require('./utility/network')(client)
 
 //stato del bot
 client.on('messageCreate',message=>{
@@ -243,7 +247,11 @@ client.on('interactionCreate',async(interaction)=>{
             .setCustomId('close-reason')
             .setEmoji('🔒')
             .setLabel(' Chiudi con il motivo')
-            .setStyle('DANGER'),
+            .setStyle('DANGER')
+    )
+
+    const ticketClaim=new MessageActionRow()
+    .addComponents(
         new MessageButton()
             .setCustomId('claim')
             .setEmoji('🔒')
@@ -294,6 +302,7 @@ client.on('interactionCreate',async(interaction)=>{
     //gestione bottoni
     let utente,user;
 
+    await db.set(`MotivoTicket_${interaction.guild.id}`,'Non specificato')
     if(interaction.customId==='support'){
         await db.set(`OpenTicket_${interaction.guild.id}`,interaction.user.id)
         //interaction.deferUpdate()
@@ -318,7 +327,7 @@ client.on('interactionCreate',async(interaction)=>{
             USE_APPLICATION_COMMANDS:false
         });
         const staff=await db.get(`role-staff_${interaction.guild.id}`)
-        canaleTicket.send({content:`Benvenuto <@${utente}>! ${staff}`,embeds:[embedTicketS],components:[ticketControls]})
+        canaleTicket.send({content:`Benvenuto <@${utente}>! ${staff}`,embeds:[embedTicketS],components:[ticketControls,ticketClaim]})
         interaction.reply({content:`<@${utente}> hai creato un ticket!\nVai in ${canaleTicket}`,ephemeral:true})
     }
     if(interaction.customId==='partnership'){
@@ -345,7 +354,7 @@ client.on('interactionCreate',async(interaction)=>{
             USE_APPLICATION_COMMANDS:false
         });
         const staff=await db.get(`role-staff_${interaction.guild.id}`)
-        canaleTicket.send({content:`Benvenuto <@${utente}>! ${staff}`,embeds:[embedTicketP],components:[ticketControls]})
+        canaleTicket.send({content:`Benvenuto <@${utente}>! ${staff}`,embeds:[embedTicketP],components:[ticketControls,ticketClaim]})
         interaction.reply({content:`<@${utente}> hai creato un ticket!\nVai in ${canaleTicket}`,ephemeral:true})
     }
     if(interaction.customId==='signal'){
@@ -372,7 +381,7 @@ client.on('interactionCreate',async(interaction)=>{
             USE_APPLICATION_COMMANDS:false
         });
         const staff=await db.get(`role-staff_${interaction.guild.id}`)
-        canaleTicket.send({content:`Benvenuto <@${utente}>! ${staff}`,embeds:[embedTicketSS],components:[ticketControls]})
+        canaleTicket.send({content:`Benvenuto <@${utente}>! ${staff}`,embeds:[embedTicketSS],components:[ticketControls,ticketClaim]})
         interaction.reply({content:`<@${utente}> hai creato un ticket!\nVai in ${canaleTicket}`,ephemeral:true})
     }
     if(interaction.customId==='close'){
@@ -414,7 +423,7 @@ client.on('interactionCreate',async(interaction)=>{
         client.channels.cache.get(await db.get(`ticketCanc_${interaction.guild.id}`)).delete()
     }
     if(interaction.customId==='claim'){
-        interaction.deferUpdate()
+        interaction.update({components:[ticketControls]})
         claim=await db.set(`ClaimTicket_${interaction.guild.id}`,interaction.user.id)
         utente=await db.get(`OpenTicket_${interaction.guild.id}`)
         const roleStaff=await db.get(`role-staff-staff_${interaction.guild.id}`)
@@ -488,9 +497,10 @@ client.on('interactionCreate',async(interaction)=>{
             },
             {
                 name:'Reclamato da: ',
-                value:`<@${await db.get(`ClaimTicket_${interaction.guild.id}>`)}`
+                value:`<@${await db.get(`ClaimTicket_${interaction.guild.id}`)}>`
             }
         )],components:[]})
+        await db.set(`MotivoTicket_${interaction.guild.id}`,'')
         interaction.channel.bulkDelete(1, true)
     }
     if(interaction.customId==='canc'){
@@ -531,25 +541,24 @@ client.on('messageCreate',async m=>{
     ctx.font='80px fire'
     ctx.fillText(m.member.user.username,600,canvas.height/2)
     ctx.font='80px glich'
-    ctx.fillText('prova',600,400)
+    ctx.fillText('BENTORNATO!',600,400)
 
     //mandare il canvas
     let channel=m.channel
     let att=new MessageAttachment(canvas.toBuffer(),'canvas.png')
 
-    channel.send({files:[att]})
-
     let embed=new MessageEmbed()
     .setTitle('Canvas')
     .setImage('attachment://canvas.png')
 
-    //channel.send({embeds:[embed], files:[att]})
+    channel.send({embeds:[embed], files:[att]})
     }
 })
 
 //canale vocale temporaneo
 const TempChannels = require("discord-temp-channels");
 const { createCanvas, loadImage } = require('canvas');
+const network = require('./utility/network');
 const tempChannels = new TempChannels(client);
 
 var canale,category;
@@ -697,18 +706,19 @@ client.on('interactionCreate',async interaction=>{
 client.on('interactionCreate',async interaction=>{
 	if(!interaction.isModalSubmit()) return;
     if(interaction.customId==='partner'){
+        const canale=client.channels.cache.get(await db.get(`partner_${interaction.guild.id}`))
+        const canaleComandi=client.channels.cache.get(await db.get(`partnerBot_${interaction.guild.id}`))
         const descrizione = interaction.fields.getTextInputValue('descrizione')
         var userID = interaction.fields.getTextInputValue('userID')
         const membri = interaction.fields.getTextInputValue('membri')
 
-		await interaction.reply({content:'Partnership conclusa! ✅'})
+		interaction.reply({content:'Partnership conclusa! ✅'})
 
         var ping='nessun ping',userID,desc=''
         const here=await db.get(`hereP_${interaction.guild.id}`)
         const everyone=await db.get(`everyoneP_${interaction.guild.id}`)
 
         const array=descrizione.split(' ')
-        console.log(descrizione)
         
         desc=descrizione.replace('','')        
         for(let i=0;i<descrizione.length;i++){
@@ -734,10 +744,8 @@ client.on('interactionCreate',async interaction=>{
         .addField('Con:',`${userID}`)
         .addField('ping:',`${ping}`)
 
-        interaction.channel.send(`${desc}`)
-        setTimeout(()=>interaction.channel.send(partner),1000)
-        //setTimeout(()=>interaction.channel.send({content:`fatto con: ${userID}\nping: ${ping}`,embeds:[embed]}),1000)
-        console.log(desc)
+        canale.send(`${desc}`)
+        setTimeout(()=>canale.send(partner),1000)
 	}
 });
 
@@ -752,31 +760,6 @@ client.on('messageCreate',message=>{
         message.react('🔥')
     }
 })
-
-//blacklist parole
-/* client.on("messageCreate", message => {
-    if(message.channel.type == "DM") return
-
-    var parolacce=db.get('parole.blacklist')
-    if(!parolacce) return
-
-    var trovata = false;
-    var testo = message.content;
-
-    parolacce.forEach(parola => {
-        if (message.content.toLowerCase().includes(parola.toLowerCase())&&message.content.toUpperCase().includes(parola.toUpperCase())) {
-            trovata = true;
-            testo = testo.replace(eval(/${parola}/g), "####");
-        }
-    })
-    if(trovata) {
-        if(!message.member.permissions.has('ADMINISTRATOR')) return;
-        else{
-            message.delete();
-            message.channel.send('NON puoi dire questa parola!')
-        }
-    }
-}) */
 
 //conteggio
 client.on('messageCreate',async message=>{

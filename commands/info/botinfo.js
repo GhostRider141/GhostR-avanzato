@@ -13,6 +13,16 @@ module.exports={
      * @param {Client} client 
      */
     async execute(client,interaction){
+        //network chat
+        const canale=await db.get(`NetworkChat_${interaction.guild.id}`)
+        const family=await db.get(`NetworkFamily_${interaction.guild.id}`)
+
+        //partner
+        const partner=await db.get(`partner_${interaction.guild.id}`)
+        const partnerComandi=await db.get(`partnerBot_${interaction.guild.id}`)
+        const here=await db.get(`hereP_${interaction.guild.id}`)
+        const everyone=await db.get(`everyoneP_${interaction.guild.id}`)
+
         //canali
         const log=await db.get(`log_${interaction.guild.id}`)
         const welcome=await db.get(`welcome_${interaction.guild.id}`)
@@ -75,6 +85,16 @@ module.exports={
                 Staff: ${Staff}
                 minorenne: <@&${minorenne}>
                 maggiorenne: <@&${maggiorenne}>
+            `)
+            .addField('Partnership',`
+                canale: <#${partner}>
+                canle comandi: <#${partnerComandi}>
+                Ping here: ${here}
+                Ping everyone: ${everyone}
+            `)
+            .addField('Network chat',`
+                canale: <#${canale}>
+                Gruppo server (id servers): ${family}
             `)
         
         await interaction.reply({embeds:[embedBot]});
