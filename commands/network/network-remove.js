@@ -21,7 +21,7 @@ module.exports = {
             })
             .setTitle('Configurazione bot')
 			
-        const NetworkChatId=client.channel.cache.get(await db.get(`NetworkChat_${interaction.guild.id}`))
+        const NetworkChatId=client.channels.cache.get(await db.get(`NetworkChat_${interaction.guild.id}`))
 		interaction.reply({embeds:[embedNetwork.setDescription(`Network chat in <#${NetworkChatId}>: Cancellata!`)]})
         db.delete(`NetworkChat_${interaction.guild.id}`)
 	},
