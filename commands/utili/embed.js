@@ -121,7 +121,7 @@ module.exports={
         {
             name: 'thumbnail',
             description: 'thumbnail embed',
-            type: 'BOOLEAN',
+            type: 'USER',
         },
         {
             name: 'imagine',
@@ -138,7 +138,7 @@ module.exports={
         const colore=interaction.options.getString('colore')
         const titolo=interaction.options.getString('titolo')
         const descrizione=interaction.options.getString('descrizione')
-        const thumbnail=interaction.options.getBoolean('thumbnail')
+        const thumbnail=interaction.options.getUser('thumbnail')
         const imagine=interaction.options.getString('imagine')
 
         const embed=new MessageEmbed()
@@ -154,7 +154,7 @@ module.exports={
         if(colore) embed.setColor(`${colore}`);
         if(titolo) embed.setTitle(`${titolo}`);
         if(descrizione) embed.setDescription(`${descrizione}`);
-        if(thumbnail) embed.setThumbnail(interaction.user.displayAvatarURL());
+        if(thumbnail) embed.setThumbnail(thumbnail.displayAvatarURL());
         if(imagine) embed.setImage(`${imagine}`);else embed.setImage(interaction.user.displayAvatarURL());
         
         await interaction.reply({embeds:[embed]});

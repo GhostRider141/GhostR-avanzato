@@ -12,7 +12,6 @@ module.exports={
             name: 'comandi',
             description: 'help dei comandi',
             type: 'STRING',
-            require:true,
             choices:[
                 {
                     name:'util',
