@@ -753,7 +753,7 @@ client.on('interactionCreate',async interaction=>{
 client.on('messageCreate',message=>{
     const embed=new MessageEmbed()
     .setColor('GREEN')
-    .setDescription(`Ciao  bellissimo **Pika** !`)
+    .setDescription(`**Pika** è bellissimo ed è un metà pikachu!`)
 
     if(message.content.startsWith('Welcome')||message.content.startsWith('welcome')||message.content.startsWith('Benvenuto')||message.content.startsWith('benvenuto')||message.content.startsWith('Hello')||message.content.startsWith('hello')||message.content.startsWith('Ciao')||message.content.startsWith('ciao')){
         message.react('👋🏻')
