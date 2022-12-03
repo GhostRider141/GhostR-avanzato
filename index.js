@@ -758,6 +758,7 @@ client.on('messageCreate',message=>{
     if(message.content.startsWith('Welcome')||message.content.startsWith('welcome')||message.content.startsWith('Benvenuto')||message.content.startsWith('benvenuto')||message.content.startsWith('Hello')||message.content.startsWith('hello')||message.content.startsWith('Ciao')||message.content.startsWith('ciao')){
         message.react('👋🏻')
         message.react('🔥')
+        message.react('⚡')
     }
     if(message.content.startsWith('Pika')){
         message.channel.send({embeds:[embed]})
