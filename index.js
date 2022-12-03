@@ -759,7 +759,7 @@ client.on('messageCreate',message=>{
         message.react('👋🏻')
         message.react('🔥')
     }
-    if(message.content.startsWith('Pika')||message.content.startsWith('pika')){
+    if(message.content.startsWith('Pika')){
         message.channel.send({embeds:[embed]})
     }
 })
