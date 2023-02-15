@@ -46,7 +46,7 @@ module.exports={
 
         if(target===author){
             return interaction.channel.send({embeds:[embedWarn
-                .setDescription('Non puoi eliminare la warn di te stesso')
+                .setDescription('❌ Non puoi eliminare la warn di te stesso')
             ],ephemeral:true});
         }
 

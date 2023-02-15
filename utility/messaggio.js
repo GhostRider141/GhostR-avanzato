@@ -1,4 +1,4 @@
-/* const aggiungiReazioni=(message,reazioni)=>{
+const aggiungiReazioni=(message,reazioni)=>{
     if(reazioni.length>0){
         message.react(reazioni[0]);
         reazioni.shift();
@@ -26,4 +26,4 @@ module.exports=async (client, idCanale, embed, reazioni=[]) => {
             }
         }
     });
-} */
+}

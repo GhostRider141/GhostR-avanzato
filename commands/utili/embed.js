@@ -1,162 +1,51 @@
-const{MessageEmbed}=require('discord.js');
+const{MessageEmbed, Modal,MessageActionRow,TextInputComponent}=require('discord.js');
 
 module.exports={
     name:'embed',
     description:'Crea un messagio embed',
     cooldown:10,
-    options:[
-        {
-            name: 'colore',
-            description: 'colore embed',
-            type: 'STRING',
-            choices:[
-                {
-                    name:'AQUA',
-                    value:'AQUA'
-                },
-                {
-                    name:'BLUE',
-                    value:'BLUE'
-                },
-                {
-                    name:'GOLD',
-                    value:'GOLD'
-                },
-                {
-                    name:'GREEN',
-                    value:'GREEN'
-                },
-                {
-                    name:'GREY',
-                    value:'GREY'
-                },
-                {
-                    name:'NAVY',
-                    value:'NAVY'
-                },
-                {
-                    name:'ORANGE',
-                    value:'ORANGE'
-                },
-                {
-                    name:'PURPLE',
-                    value:'PURPLE'
-                },
-                {
-                    name:'RED',
-                    value:'RED'
-                },
-                {
-                    name:'WHITE',
-                    value:'WHITE'
-                },
-                {
-                    name:'YELLOW',
-                    value:'YELLOW'
-                },
-                {
-                    name:'FUCHSIA',
-                    value:'FUCHSIA'
-                },
-                {
-                    name:'DARK_AQUA',
-                    value:'DARK_AQUA'
-                },
-                {
-                    name:'DARK_BLUE',
-                    value:'DARK_BLUE'
-                },
-                {
-                    name:'DARK_BUT_NOT_BLACK',
-                    value:'DARK_BUT_NOT_BLACK'
-                },
-                {
-                    name:'DARK_GOLD',
-                    value:'DARK_GOLD'
-                },
-                {
-                    name:'DARK_GREEN',
-                    value:'DARK_GREEN'
-                },
-                {
-                    name:'DARK_GREY',
-                    value:'DARK_GREY'
-                },
-                {
-                    name:'DARK_NAVY',
-                    value:'DARK_NAVY'
-                },
-                {
-                    name:'DARK_ORANGE',
-                    value:'DARK_ORANGE'
-                },
-                {
-                    name:'DARK_PURPLE',
-                    value:'DARK_PURPLE'
-                },
-                {
-                    name:'DARK_RED',
-                    value:'DARK_RED'
-                },
-                {
-                    name:'RANDOM',
-                    value:'RANDOM'
-                },
-                {
-                    name:'DEFAULT',
-                    value:'DEFAULT'
-                },
-            ]
-        },
-        {
-            name: 'titolo',
-            description: 'titolo embed',
-            type: 'STRING',
-        },
-        {
-            name: 'descrizione',
-            description: 'descrizione embed',
-            type: 'STRING',
-        },
-        {
-            name: 'thumbnail',
-            description: 'thumbnail embed',
-            type: 'USER',
-        },
-        {
-            name: 'imagine',
-            description: 'imagine embed',
-            type: 'STRING',
-        },
-    ],
     /**
      * @param {CommandInteraction} interaction 
      * @param {Client} client 
      */
     async execute(client,interaction){
-
-        const colore=interaction.options.getString('colore')
-        const titolo=interaction.options.getString('titolo')
-        const descrizione=interaction.options.getString('descrizione')
-        const thumbnail=interaction.options.getUser('thumbnail')
-        const imagine=interaction.options.getString('imagine')
-
-        const embed=new MessageEmbed()
-        .setAuthor({
-            name: client.user.username,
-            iconURL: client.user.displayAvatarURL()
-        })
-        .setFooter({
-            text: `Richiesto da: ${interaction.user.tag}`,
-            iconURL: interaction.user.displayAvatarURL()
-        })
-
-        if(colore) embed.setColor(`${colore}`);
-        if(titolo) embed.setTitle(`${titolo}`);
-        if(descrizione) embed.setDescription(`${descrizione}`);
-        if(thumbnail) embed.setThumbnail(thumbnail.displayAvatarURL());
-        if(imagine) embed.setImage(`${imagine}`);else embed.setImage(interaction.user.displayAvatarURL());
+        const modal=new Modal()
+            .setCustomId('embed')
+            .setTitle('Embed')
         
-        await interaction.reply({embeds:[embed]});
+        const autore=new TextInputComponent()
+            .setCustomId('autore')
+            .setLabel('Autore:')
+            .setStyle('SHORT')
+            .setPlaceholder('si/no')
+            .setRequired(true)
+        const colore=new TextInputComponent()
+            .setCustomId('colore')
+            .setLabel('Colore:')
+            .setStyle('SHORT')
+            .setPlaceholder(`Default,White,Aqua,Green, ... ,Navy,DarkGreen, ...`.toUpperCase())
+        const titolo=new TextInputComponent()
+            .setCustomId('titolo')
+            .setLabel('Titolo:')
+            .setStyle('SHORT')
+            .setPlaceholder('titolo')
+        const descrizione=new TextInputComponent()
+            .setCustomId('descrizione')
+            .setLabel('Descrizione server:')
+            .setStyle('PARAGRAPH')
+            .setPlaceholder('Descrizione')
+        const thumbnail=new TextInputComponent()
+            .setCustomId('thumbnail')
+            .setLabel('Thumbnail:')
+            .setStyle('SHORT')
+            .setPlaceholder('ID utente')
+        
+        const row=new MessageActionRow().addComponents(autore);
+        const row2=new MessageActionRow().addComponents(colore);
+        const row3=new MessageActionRow().addComponents(titolo);
+        const row4=new MessageActionRow().addComponents(descrizione);
+        const row5=new MessageActionRow().addComponents(thumbnail);
+        modal.addComponents(row,row2,row3,row4,row5);
+        await interaction.showModal(modal);
     }
 }

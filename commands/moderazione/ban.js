@@ -46,13 +46,13 @@ module.exports={
         }
         if(target===author){
             return interaction.channel.send({embeds:[embedBan
-                .setDescription('Non puoi bannare te stesso')
+                .setDescription('❌ Non puoi bannare te stesso')
             ],ephemeral:true});
         }
 
         if(target.permissions.has('ADMINISTRATOR')){
             return interaction.channel.send({embeds:[embedBan
-                .setDescription('Non puoi bannare un amministratore')
+                .setDescription('❌ Non puoi bannare un amministratore')
             ],ephemeral:true});
         }
 
@@ -70,7 +70,7 @@ module.exports={
 
         if(!interaction.guild.members.cache.get(target.id).bannable){
             return interaction.channel.send({embeds:[embedBan
-                .setDescription('Non puoi bannare questo utente')
+                .setDescription('❌ Non puoi bannare questo utente')
             ],ephemeral:true});
         }
         

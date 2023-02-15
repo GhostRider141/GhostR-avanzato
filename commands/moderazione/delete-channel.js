@@ -36,15 +36,15 @@ module.exports={
             ],ephemeral:true});
         }else if(!canale){
             interaction.reply({embeds:[embedDelete
-                .setDescription('Questo canale verrà eliminato tra 10 secondi')
+                .setDescription('❗Questo canale verrà eliminato tra 10 secondi')
             ]});
             setTimeout(()=>interaction.channel.delete(),10000);
         }else{
             canale.send({embeds:[embedDelete
-                .setDescription('Il canale verrà eliminato tra 10 secondi')
+                .setDescription('❗Il canale verrà eliminato tra 10 secondi')
             ]});
             interaction.reply({embeds:[embedDelete
-                .setDescription(`<#${canale.id}> verrà eliminato tra 10 secondi`)
+                .setDescription(`❗<#${canale.id}> verrà eliminato tra 10 secondi`)
             ],ephemeral:true})
             setTimeout(()=>canale.delete(),10000);
         }

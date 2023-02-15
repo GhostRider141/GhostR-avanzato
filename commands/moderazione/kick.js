@@ -46,12 +46,12 @@ module.exports={
 
         if(target===author){
             return interaction.channel.send({embeds:[embedKick
-                .setDescription('Non puoi kickare te stesso')
+                .setDescription('❌ Non puoi kickare te stesso')
             ],ephemeral:true});
         }
         if(target.permissions.has('ADMINISTRATOR')){
             return interaction.channel.send({embeds:[embedKick
-                .setDescription('Non puoi kickare un amministratore')
+                .setDescription('❌ Non puoi kickare un amministratore')
             ],ephemeral:true});
         }
 
@@ -69,7 +69,7 @@ module.exports={
 
         if(!interaction.guild.members.cache.get(target.id).kickable){
             return interaction.channel.send({embeds:[embedKick
-                .setDescription('Non puoi kickare questo utente')
+                .setDescription('❌ Non puoi kickare questo utente')
             ],ephemeral:true});
         }
         

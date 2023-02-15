@@ -38,7 +38,7 @@ module.exports={
         }
         if(target===author){
             return interaction.channel.send({embeds:[embedUnmute
-                .setDescription('Non puoi bannare te stesso')
+                .setDescription('❌ Non puoi bannare te stesso')
             ],ephemeral:true});
         }
         if(!target){

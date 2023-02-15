@@ -46,12 +46,12 @@ module.exports={
 
         if(target===author){
             return interaction.channel.send({embeds:[embedWarn
-                .setDescription('Non puoi warnare te stesso')
+                .setDescription('❌ Non puoi warnare te stesso')
             ],ephemeral:true});
         }
         if(target.permissions.has('ADMINISTRATOR')){
             return interaction.channel.send({embeds:[embedWarn
-                .setDescription('Non puoi warnare un amministratore')
+                .setDescription('❌ Non puoi warnare un amministratore')
             ],ephemeral:true});
         }
 

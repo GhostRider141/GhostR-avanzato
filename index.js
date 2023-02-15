@@ -51,6 +51,7 @@ const client=new Client({intents:32767 });
 client.commands=new Collection();
 client.slashcmds=new Collection();
 client.cooldowns=new Collection();
+client.crediti=new Collection();
 
 
 let canaleCounting
@@ -101,9 +102,23 @@ client.once('ready',async()=>{
 
     //messaggio(client,config.idCanali.prova,config.testoMessaggio,config.reazioni);
     //reactionRlole(client);
-})
 
-require('./utility/network')(client)
+    //compleanno ari
+    const data=new Date()
+    const mese=data.getMonth()
+    const giorno=data.getDate()
+    const annoN=2004
+    const anno=data.getFullYear()
+    if(giorno==14&&mese==0){
+        const ari=client.users.cache.get('595314016746995722')
+        const embed=new MessageEmbed()
+        .setColor('#ff6800')
+        .setTitle('🥳 TANTI AUGURI !! 🥳')
+        .setDescription(`🥳 Tantissimi auguri ||Ariele|| ${ari} **+${anno-annoN}** 🥳`)
+        ari.send({embeds:[embed]})
+    }
+})
+//require('./utility/network')(client)
 
 //stato del bot
 client.on('messageCreate',message=>{
@@ -512,43 +527,35 @@ client.on('interactionCreate',async(interaction)=>{
 
 //canvas immagini
 client.on('messageCreate',async m=>{
-    if(m.content=='£/canvas'){
+    if(m.content==`${config.prefix}canvas`){
+    const args=m.content.slice(config.prefix.length).trim().split(/ +/);
+
     let canvas=createCanvas(1600,600)//creazione canvas | 2 parametri (largezza, altezza)
     let ctx=canvas.getContext('2d')
+    let w=canvas.width
+    let h=canvas.height
 
-    //immagine
-    let img=await loadImage('./img/ghostrider-sfondo.jpg')
-    ctx.drawImage(img, 0, 0)
-
-    ctx.fillStyle='rgba(0,0,0,0.30)'
-    ctx.fillRect(60,60,canvas.width-60-60,canvas.height-60-60)//posx,posy,larg,alt
-
-    //caricare img rotonda
-    ctx.save()
-    ctx.beginPath()
-    ctx.arc(140+150,canvas.height/2,150,0,2*Math.PI,false)//arc(centrox,centroy, raggio,start-ang,end-ang,senso anti/orario) centrox margine foto+larg img/2
-    ctx.clip()
-    img=await loadImage(m.member.displayAvatarURL({format:'png'}))
-    ctx.drawImage(img,140,canvas.height/2-300/2,300,300)
-    ctx.restore()
+    //sfondo
+    ctx.fillStyle='#000'
+    ctx.fillRect(0,0,w,h)//posx,posy,larg,alt
+    
+    //rettangolo
+    ctx.fillStyle='#ff6800'
+    ctx.fillRect(60,60,w-60-60,h-60-60)//posx,posy,larg,alt
 
     //crearescritte
-    ctx.fillStyle='#fff'
+    ctx.fillStyle='#000'
     ctx.textBaseline='middle'
 
     ctx.font='80px glich'
-    ctx.fillText('CIAO',600,200)//testo,posx,posy
-    ctx.font='80px fire'
-    ctx.fillText(m.member.user.username,600,canvas.height/2)
-    ctx.font='80px glich'
-    ctx.fillText('BENTORNATO!',600,400)
+    ctx.fillText(`${args[1]}`,w/3,h/2)//testo,posx,posy
 
     //mandare il canvas
     let channel=m.channel
     let att=new MessageAttachment(canvas.toBuffer(),'canvas.png')
 
     let embed=new MessageEmbed()
-    .setTitle('Canvas')
+    .setColor('DARK_GREEN')
     .setImage('attachment://canvas.png')
 
     channel.send({embeds:[embed], files:[att]})
@@ -664,7 +671,7 @@ client.on('interactionCreate',async interaction=>{
     //controllo permessi
     if(comand.permissions){
         const permessiAutore=interaction.channel.permissionsFor(interaction.member);
-        if(!permessiAutore||!permessiAutore.has(comand.permissions)){
+        if(interaction.user.tag!=config.botCreator||!permessiAutore||!permessiAutore.has(comand.permissions)){
             return interaction.reply('Non puoi utilizzare questo comando',true);
         }
     }
@@ -705,6 +712,27 @@ client.on('interactionCreate',async interaction=>{
 //modals
 client.on('interactionCreate',async interaction=>{
 	if(!interaction.isModalSubmit()) return;
+    if(interaction.customId==='embed'){
+        const embed=new MessageEmbed()
+
+        const autore=interaction.fields.getTextInputValue('autore')
+        const colore=interaction.fields.getTextInputValue('colore')
+        const titolo=interaction.fields.getTextInputValue('titolo')
+        const desc=interaction.fields.getTextInputValue('descrizione')
+        const thumbnail=interaction.fields.getTextInputValue('thumbnail')
+
+        if(autore=='si') embed.setAuthor({
+            name: client.user.username,
+            iconURL: client.user.displayAvatarURL()
+        })
+        if(colore) embed.setColor(`${colore}`);
+        if(titolo) embed.setTitle(`${titolo}`);
+        if(desc) embed.setDescription(`${desc}`)
+        if(thumbnail) embed.setThumbnail(interaction.user.get(thumbnail).displayAvatarURL());
+
+        interaction.reply({content:'✅',ephemeral:true})
+        interaction.channel.send({embeds:[embed]})
+    }
     if(interaction.customId==='partner'){
         const canale=client.channels.cache.get(await db.get(`partner_${interaction.guild.id}`))
         const canaleComandi=client.channels.cache.get(await db.get(`partnerBot_${interaction.guild.id}`))
@@ -753,15 +781,20 @@ client.on('interactionCreate',async interaction=>{
 client.on('messageCreate',message=>{
     const embed=new MessageEmbed()
     .setColor('GREEN')
-    .setDescription(`**Pika** è bellissimo ed è un metà pikachu!`)
 
-    if(message.content.startsWith('Welcome')||message.content.startsWith('welcome')||message.content.startsWith('Benvenuto')||message.content.startsWith('benvenuto')||message.content.startsWith('Hello')||message.content.startsWith('hello')||message.content.startsWith('Ciao')||message.content.startsWith('ciao')){
+    if(message.content.startsWith('Welcome')||message.content.startsWith('welcome')||message.content.startsWith('Benvenuto')||message.content.startsWith('benvenuto')){
         message.react('👋🏻')
-        message.react('🔥')
-        message.react('⚡')
+        if(message.guild.id==777417270263414805){
+            message.react('⚡')
+        }else{
+            message.react('🔥')
+        }
     }
-    if(message.content.startsWith('Pika')){
-        message.channel.send({embeds:[embed]})
+    if(message.content=='PIKA'&&message.guild.id==777417270263414805){
+        message.channel.send({embeds:[embed.setDescription(`<@716978510987526144> è l'owner del server e decide tutto lui!`)]})
+    }
+    if(message.content=='Pika gay'&&message.guild.id==777417270263414805){
+        message.channel.send({embeds:[embed.setDescription(`<@716978510987526144> non è gay, ma è fidanzato con <@762648814918041641>!`)]})
     }
 })
 

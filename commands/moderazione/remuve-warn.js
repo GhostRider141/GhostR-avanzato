@@ -39,7 +39,7 @@ module.exports={
 
         if(target===author){
             return interaction.channel.send({embeds:[embedWarn
-                .setDescription('Non puoi warnare te stesso')
+                .setDescription('❌ Non puoi warnare te stesso')
             ],ephemeral:true});
         }
 

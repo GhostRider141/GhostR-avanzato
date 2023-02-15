@@ -44,12 +44,12 @@ module.exports={
         }
         if(target===author){
             return interaction.channel.send({embeds:[embedMute
-                .setDescription('Non puoi mutare te stesso')
+                .setDescription('❌ Non puoi mutare te stesso')
             ],ephemeral:true});
         }
         if(target.permissions.has('ADMINISTRATOR')){
             return interaction.channel.send({embeds:[embedMute
-                .setDescription('Non puoi mutare un amministratore')
+                .setDescription('❌ Non puoi mutare un amministratore')
             ],ephemeral:true});
         }
         if(!target){

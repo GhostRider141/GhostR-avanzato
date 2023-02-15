@@ -14,7 +14,7 @@ module.exports={
             name: 'pannelli',
             description: 'help del ticket',
             type: 'STRING',
-            require:true,
+            required:true,
             choices:[
                 {
                     name:'support',

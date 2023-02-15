@@ -1,4 +1,4 @@
-/* const messaggio=require('./messaggio');
+const messaggio=require('./messaggio');
 const config=require('../config.json');
 const {MessageEmbed}=require('discord.js');
 const {QuickDB} = require('quick.db');
@@ -9,10 +9,12 @@ module.exports=(client)=>{
     client.guilds.cache.forEach((server)=>{
         //dati
         let idCanale=db.get(`verifica_${server.id}`)
+        if(!idCanale) return
         const listaEmoji={
             '🔵':'verifica'
         };
-        const canale=server.channels.cache.find(c=>c.id===idCanale)||server.channels.cache.find(c=>c.name=='verifica')
+        const canale=client.channels.cache.find(c=>c.id===idCanale)||client.channels.cache.find(c=>c.name=='verifica')
+        if(!canale) return;
 
         //lista reazioni e messaggio
         const listaReazioni=[];
@@ -30,7 +32,16 @@ module.exports=(client)=>{
             embed.addField(`${emojiFinale}`,`${listaEmoji[emoji]}`);
         }
         //invio messaggio
-        messaggio(client,idCanale,embed,listaReazioni);
+        //messaggio(client,idCanale,embed,listaReazioni);
+        //canale.send({content:'Verifica',embeds:[embed]})
+        client.on('messageCreate',message=>{        
+            if(message.content.startsWith('Verifica')&&message.channel.id==idCanale){
+                for(let i=0;i<listaEmoji.size;i++){
+                    message.edit({embeds:[embed]})
+                    message.react(listaEmoji)
+                }
+            }
+        })
 
         const gestisciReazioni=(reaction,user,aggiungi)=>{
             const reactionEmoji=reaction._emoji;
@@ -95,7 +106,16 @@ module.exports=(client)=>{
             embed.addField(`${emojiFinale}`,`${listaEmoji[emoji]}`);
         }
         //invio messaggio
-        messaggio(client,idCanale,embed,listaReazioni);
+        //messaggio(client,idCanale,embed,listaReazioni);
+        //canale.send({content:'Verifica',embeds:[embed]})
+        client.on('messageCreate',message=>{        
+            if(message.content.startsWith('Verifica')&&message.channel.id==idCanale){
+                for(let i=0;i<listaEmoji.size;i++){
+                    message.edit({embeds:[embed]})
+                    message.react(listaEmoji)
+                }
+            }
+        })
 
         const gestisciReazioni=(reaction,user,aggiungi)=>{
             const {guild}=reaction.message;
@@ -129,4 +149,4 @@ module.exports=(client)=>{
             }
         })
     })
-} */
+}

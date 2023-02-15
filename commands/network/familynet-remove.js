@@ -6,7 +6,7 @@ const db=new QuickDB()
 module.exports = {
     name: 'familynet-remove',
     description: 'rimuovi la famiglia network!',
-    permissions:['ADMINISTRATOR'],
+    permissions:['MANAGE_GUILD'],
     cooldown:5,
 	/**
 	 * @param {CommandInteraction} interaction 
@@ -23,10 +23,10 @@ module.exports = {
 
         const FamilyNetId=await db.get(`NetworkFamily_${interaction.guild.id}`)
         if(FamilyNetId){
-            interaction.reply({embeds:[embedNetwork.setDescription(`Famiglia network (id server: ${interaction.guild.id}): Cancellata!`)]})
+            interaction.reply({embeds:[embedNetwork.setDescription(`❗Famiglia network (id server: ${interaction.guild.id}): Cancellata!`)]})
             db.delete(`NetworkFamily_${interaction.guild.id}`)
         }else{
-            interaction.reply({embeds:[embedNetwork.setDescription(`Non puoi eliminare il gruppo network: non l'hai creato tu!`)]})
+            interaction.reply({embeds:[embedNetwork.setDescription(`❌ Non puoi eliminare il gruppo network: non l'hai creato tu!`)]})
         }
 	},
 };

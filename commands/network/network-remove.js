@@ -6,7 +6,7 @@ const db=new QuickDB()
 module.exports = {
     name: 'network-remove',
     description: 'rimuovi la network chat!',
-    permissions:['ADMINISTRATOR'],
+    permissions:['MANAGE_GUILD'],
     cooldown:5,
 	/**
 	 * @param {CommandInteraction} interaction 
@@ -22,7 +22,7 @@ module.exports = {
             .setTitle('Configurazione bot')
 			
         const NetworkChatId=client.channels.cache.get(await db.get(`NetworkChat_${interaction.guild.id}`))
-		interaction.reply({embeds:[embedNetwork.setDescription(`Network chat in ${NetworkChatId}: Cancellata!`)]})
+		interaction.reply({embeds:[embedNetwork.setDescription(`❗Network chat in ${NetworkChatId}: Cancellata!`)]})
         db.delete(`NetworkChat_${interaction.guild.id}`)
 	},
 };

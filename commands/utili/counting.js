@@ -74,6 +74,6 @@ module.exports={
                     `)
                 ]})
             }
-        }else interaction.reply({content:`canale sbagliato, vai in: <#${canaleCounting}>`,ephemeral:true})
+        }else interaction.reply({content:`❌ canale sbagliato, vai in: <#${canaleCounting}>`,ephemeral:true})
     }
 }

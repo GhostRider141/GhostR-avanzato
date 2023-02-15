@@ -115,7 +115,7 @@ module.exports={
                 await i.update({embeds:[embedButton.setDescription('Mi dispiace che non vuoi valutarmi. 🙁\n**ri-fai il comanto per ri-valutarlo**')],components:[]});
             }
             if(i.customId==='si'){
-                await i.update({embeds:[embedButton.setDescription('Grazie che mi voti! 😀\nDammi un voto da 1 a 10! 🗳️\n**ri-fai il comanto per ri-valutarlo**')],components:[menu]});
+                await i.update({embeds:[embedButton.setDescription('✅ Grazie che mi voti! 😀\nDammi un voto da 1 a 10! 🗳️\n**ri-fai il comanto per ri-valutarlo**')],components:[menu]});
                 client.on('interactionCreate',async i=>{
                     if(!i.isSelectMenu()) return;
                     if(i.customId==='menu'){

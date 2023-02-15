@@ -33,6 +33,10 @@ module.exports={
                     name:'network',
                     value:'network'
                 },
+                {
+                    name:'commercio',
+                    value:'commercio'
+                },
             ]
         },
     ],
@@ -78,6 +82,16 @@ module.exports={
                 embedhelp.addField(`\`${file.name}\` :`,`${file.description}`)
             })
             embedhelp.setDescription('**Network chat:**')
+        }else if(help=='commercio'){
+            let file;
+            const fileComandiMod=fs.readdirSync(`./commands/commercio`).filter(file=>file.endsWith('.js'));
+            fileComandiMod.map((c)=>{
+                file=require(`../commercio/${c}`)
+                embedhelp.addField(`\`${file.name}\` :`,`${file.description}`)
+            })
+            embedhelp.setDescription(`**Commercio:**
+            per creare un nuovo "commercio" fare: \`/credito utente [crea:true]\`
+            `)
         }else if(help=='members'){
             embedhelp.addField('Conteggio membri',`
             per resettare fai: \`/config members-(bot,membri,utenti)\`
@@ -91,6 +105,7 @@ module.exports={
             \`${this.name} util\`: per i comandi utility
             \`${this.name} info\`: per i comandi di informazioni
             \`${this.name} mod\`: per i comandi di moderazione
+            \`${this.name} commercio\`: per i comandi del commercio (crediti/punti)
             `)
         }
         return await interaction.reply({embeds:[embedhelp]})

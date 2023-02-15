@@ -40,13 +40,13 @@ module.exports={
         if(count>100){
             interaction.channel.bulkDelete(100,true);
             interaction.reply({embeds:[embedClear
-                .setDescription('Hai eliminato il massimo di messaggi!')
+                .setDescription('✅ Hai eliminato il massimo di messaggi!')
             ],ephemeral:true});
         }
         else{
             interaction.channel.bulkDelete(count, true)
             interaction.reply({embeds:[embedClear
-                .setDescription(`Hai eliminato ${count} messaggi`)
+                .setDescription(`✅ Hai eliminato ${count} messaggi`)
             ],ephemeral:true})
         }
     }

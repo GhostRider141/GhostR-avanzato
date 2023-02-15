@@ -6,7 +6,7 @@ const db=new QuickDB()
 module.exports = {
     name: 'network-add',
     description: 'aggiungi una network chat!',
-    permissions:['ADMINISTRATOR'],
+    permissions:['MANAGE_GUILD'],
     cooldown:5,
     options:[
 		{
@@ -31,6 +31,6 @@ module.exports = {
 
         const NetworkChatId=interaction.options.getChannel('canale').id
         await db.set(`NetworkChat_${interaction.guild.id}`,NetworkChatId)
-		interaction.reply({embeds:[embedNetwork.setDescription(`Nuova network chat in <#${NetworkChatId}>: Creata!`)]})
+		interaction.reply({embeds:[embedNetwork.setDescription(`✅ Nuova network chat in <#${NetworkChatId}>: Creata!`)]})
 	},
 };

@@ -36,6 +36,23 @@ module.exports={
                 .addField('Utilizzo comando',`${this.name} [@utente / user ID] [motivo]`)
             ],ephemeral:true});
         }
+        if(target===author){
+            return interaction.channel.send({embeds:[embedBan
+                .setDescription('❌ Non puoi sbannare te stesso')
+            ],ephemeral:true});
+        }
+
+        if(target.permissions.has('ADMINISTRATOR')){
+            return interaction.channel.send({embeds:[embedBan
+                .setDescription('❌ Non puoi sbannare un amministratore')
+            ],ephemeral:true});
+        }
+
+        if(!interaction.guild.members.cache.get(target.id).bannable){
+            return interaction.channel.send({embeds:[embedBan
+                .setDescription('❌ Non puoi sbannare questo utente')
+            ],ephemeral:true});
+        }
 
         if(!target){
             return interaction.channel.send({embeds:[embedUnban

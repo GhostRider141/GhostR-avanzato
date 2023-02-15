@@ -6,7 +6,7 @@ const db=new QuickDB()
 module.exports = {
     name: 'familynet-add',
     description: 'aggiungi una famiglia network!',
-    permissions:['ADMINISTRATOR'],
+    permissions:['MANAGE_GUILD'],
     cooldown:5,
     options:[
         {
@@ -43,7 +43,7 @@ module.exports = {
         FamilyNet=[await db.get(`NetworkFamily_${interaction.guild.id}`)]
 
 		interaction.reply({embeds:[embedNetwork.setDescription(`
-        Nuova famiglia network (id server: ${interaction.guild.id}): Creata!
+        ✅ Nuova famiglia network (id server: ${interaction.guild.id}): Creata!
         Hai aggiunto: ${FId}
         Alri server: ${FamilyNet}
         `)]})

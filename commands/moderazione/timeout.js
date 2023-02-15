@@ -57,12 +57,12 @@ module.exports={
         }
         if(target===author){
             return interaction.channel.send({embeds:[embedTimeout
-                .setDescription('Non puoi mettere in pausa te stesso')
+                .setDescription('❌ Non puoi mettere in pausa te stesso')
             ],ephemeral:true});
         }
         if(target.permissions.has('ADMINISTRATOR')){
             return interaction.channel.send({embeds:[embedTimeout
-                .setDescription('Non puoi mettere in pausa un amministratore')
+                .setDescription('❌ Non puoi mettere in pausa un amministratore')
             ],ephemeral:true});
         }
         if(!target){

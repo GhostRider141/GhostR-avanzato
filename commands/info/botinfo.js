@@ -88,7 +88,7 @@ module.exports={
             `)
             .addField('Partnership',`
                 canale: <#${partner}>
-                canle comandi: <#${partnerComandi}>
+                canale comandi: <#${partnerComandi}>
                 Ping here: ${here}
                 Ping everyone: ${everyone}
             `)
