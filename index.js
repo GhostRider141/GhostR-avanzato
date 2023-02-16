@@ -7,9 +7,6 @@ const messaggio=require('./utility/messaggio');
 const reactionRlole=require('./utility/reactionRole');
 const {QuickDB} = require('quick.db');
 const db=new QuickDB()
-/* const {registerFont}=require('canvas')
-registerFont('./font/Doctor Glitch.otf',{family:'glich'})
-registerFont('./font/Burn.otf',{family:'fire'}) */
 
 //set database quick.db
 const server=db.table('server')
@@ -76,20 +73,7 @@ for(const file of fileComandiModerazione){
 require('./Handlers/Events')(client);
 require('./Handlers/Commands')(client);
 client.once('ready',async()=>{
-    console.log(`GhostR® è online!`);
-    client.user.setActivity(`/help in ${client.guilds.cache.size} ${client.guilds.cache.size>1?'Servers':'Server'}`,{type:'LISTENING' })
     //client.user.setStatus('invisible')
-
-    const canaleReady=client.channels.cache.get('976493792918122596')
-    const embed=new MessageEmbed()
-    .setColor('GREY')
-    .setTitle('STATO')
-    .setAuthor({
-        name:client.user.username,
-        iconURL:client.user.displayAvatarURL()
-    })
-    .addField('Online','🟢')
-    //canaleReady.send({embeds:[embed]})
 
     //Registro comandi
     client.guilds.cache.forEach((guild)=>{
@@ -114,7 +98,7 @@ client.once('ready',async()=>{
         const embed=new MessageEmbed()
         .setColor('#ff6800')
         .setTitle('🥳 TANTI AUGURI !! 🥳')
-        .setDescription(`🥳 Tantissimi auguri ||Ariele|| ${ari} **+${anno-annoN}** 🥳`)
+        .setDescription(`🥳 Tantissimi auguri al mio creatore **__~~Ariele~~__** ${ari} **+${anno-annoN}** 🥳`)
         ari.send({embeds:[embed]})
     }
 })
