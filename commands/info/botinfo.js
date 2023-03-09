@@ -44,6 +44,8 @@ module.exports={
         const maggiorenne=await db.get(`maggiorenne_${interaction.guild.id}`)
         const minorenne=await db.get(`minorenne_${interaction.guild.id}`)
 
+        const comandi=await db.get('commandi-tot')
+
         const embedBot=new MessageEmbed()
             .setColor('GOLD')
             .setAuthor({
@@ -54,10 +56,11 @@ module.exports={
             .addField('Informazioni del bot',`
                 **ID del bot:** ${client.user.id}
                 **tag del Bot:** ${client.user.tag}
-                **🆘Comando aiuto**: /help
                 **📦Server**: ${client.guilds.cache.size}
                 **🔲Canali**: ${client.channels.cache.size}
                 **⌚Tempo**: ${ms(client.uptime,{long:true})}
+                **🆘Comando aiuto**: \`/help [categoria comandi]\`
+                **Numero comandi totali:** ${comandi}
             `)
             .addField('\u200b',`**SETUP MANUALE**`)
             .addField('Facoltativi',`prima di fare il setup completo

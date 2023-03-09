@@ -1,7 +1,7 @@
 const { CommandInteraction, MessageEmbed, MessageActionRow, MessageButton, Client } = require("discord.js");
 const mate = require('mathjs');
 const {QuickDB} = require('quick.db');
-const db=require('quick.db');
+const db=new QuickDB()
 
 module.exports = {
     name: 'calculator',
@@ -16,7 +16,7 @@ module.exports = {
         const Author = guild.members.cache.get(author.id);
 
         let tot,totale=0;
-        await db.set('calc.default',`\`\`\`                               0\`\`\``)
+        await db.set('calc.default',`\`\`\`0                \`\`\``)
         await db.set('calc.calcolo',[])
 
         const embed = new MessageEmbed()
@@ -24,7 +24,7 @@ module.exports = {
                 name: client.user.username,
                 iconURL: client.user.displayAvatarURL()
             })
-            .setDescription(`\`\`\`                1 + 0 + 4 = 104\`\`\``)
+            .setDescription(`\`\`\`1+4+1=141            \`\`\``)
             .setFooter({
                 text: `Richiesto da: ${Author.user.tag}`,
                 iconURL: Author.user.displayAvatarURL()

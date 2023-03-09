@@ -24,13 +24,14 @@ module.exports={
         const canale=interaction.options.getChannel('canale')
         const stringa=interaction.options.getString('stringa')
         if(!stringa.length){
-            return interaction.reply('Devi scrivere qualcosa',true);
+            return interaction.reply({content:'Devi scrivere qualcosa',ephemeral:true});
         }
 
         if(canale){
-            interaction.reply({content:`Messaggio inviato in ${canale}`})
+            interaction.reply({content:`Messaggio inviato in ${canale}`,ephemeral:true})
             canale.send(stringa)
         }else{
+            interaction.reply({content:'Messaggio:',ephemeral:true})
             interaction.channel.send(stringa);
         }
     }

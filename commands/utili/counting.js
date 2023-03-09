@@ -4,14 +4,13 @@ const db=new QuickDB()
 
 module.exports={
     name:'counting',
-    description:'Gioco del conteggio',
+    description:'Gioco del conteggio - record numero del server',
     cooldown:5,
     options:[
         {
             name: 'comandi',
             description: 'help del gioco',
             type: 'STRING',
-            require:true,
             choices:[
                 {
                     name:'start',
@@ -33,7 +32,7 @@ module.exports={
      * @param {Client} client 
      */
     async execute(client,interaction){
-        canaleCounting=await db.get(`counting_${interaction.guild.id}`)
+        canaleCounting=await db.get(`canale_counting_${interaction.guild.id}`)
         if(!canaleCounting) return interaction.reply({content:'non hai settato il canale!',ephemeral:true})
         if(interaction.channel.id==canaleCounting){
             const embedCouter=new MessageEmbed()
@@ -66,7 +65,7 @@ module.exports={
                 ]})
             }else{
                 interaction.reply({embeds:[embedCouter
-                    .addField('Gioco Conteggio',`
+                    .addField(`__Record del server: ${await db.get(`max_counting_${interaction.guild.id}`)}__`,`
                     per settare il canale per il conteggio fai: \`/config counting (menzione un canale)\`
                     per avere le regole del gioco fai: \`/counting help\`
                     per il messaggio di inizio del gioco fai: \`/counting start\`

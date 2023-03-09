@@ -4,7 +4,7 @@ const db=new QuickDB()
 
 module.exports={
     name:'warnings',
-    description:'informazioni delle warn/avvis di un utente',
+    description:'informazioni degli warn/avvisi di un utente',
     permissions:['ADMINISTRATOR'],
     cooldown:10,
     options:[

@@ -2,7 +2,7 @@ const { MessageEmbed } = require('discord.js');
 
 module.exports={
     name:'addrole',
-    description:'aggiunge un ruolo da un utente',
+    description:'aggiunge un ruolo ad un utente',
     permissions:['MODERATE_MEMBERS'],
     cooldown:10,
     options:[

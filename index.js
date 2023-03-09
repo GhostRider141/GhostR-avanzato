@@ -25,24 +25,6 @@ const mute=db.table('mute')
 mute.set('mute_id','')
 mute.set('mute_id_reason','')
 
-db.set('parole.blacklist',[])
-
-db.set('counting',0)
-db.set('counting_autore','')
-
-db.set('ticket','')
-
-db.set('voto1',0)
-db.set('voto2',0)
-db.set('voto3',0)
-db.set('voto4',0)
-db.set('voto5',0)
-db.set('voto6',0)
-db.set('voto7',0)
-db.set('voto8',0)
-db.set('voto9',0)
-db.set('voto10',0)
-
 //INIZIO
 const client=new Client({intents:32767 });
 client.commands=new Collection();
@@ -606,38 +588,44 @@ client.on('guildMemberRemove',async member => {
 
 //Benvenuto 
 client.on('guildMemberAdd',async member=>{
-    const welcome=client.channels.cache.get(await db.get(`welcome_${member.guild.id}`))||client.channels.cache.find(c=>c.name.startsWith('welcome'));
-    if(!welcome) return;
-    const welcomeEmbed=new MessageEmbed()
-        .setColor('DARK_GREEN')
-        .setTitle('**Benvenuto!**')
-        .setAuthor({
-            name:member.guild.name,
-            iconURL:member.guild.iconURL()
-        })
-        .setDescription(`**Diamo il benvenuto a <@${member.id}> !**`)
-        .setFooter({text:`${member.guild.name}`})
-    wait(4);
-    welcome.send({embeds:[welcomeEmbed]})
+    if(member.guild.channels.cache.find(c=>c.id)==await db.get(`welcome_${member.guild.id}`)){
+        const welcome=client.channels.cache.get(await db.get(`welcome_${member.guild.id}`))||client.channels.cache.find(c=>c.name.startsWith('welcome'))
+        if(!welcome) return;
+        const welcomeEmbed=new MessageEmbed()
+            .setColor('DARK_GREEN')
+            .setTitle('**Benvenuto!**')
+            .setAuthor({
+                name:member.user.tag,
+                iconURL:member.user.displayAvatarURL()
+            })
+            .setDescription(`<@${member.id}> è **entrato/a** nel server!`)
+            .setFooter({text:`${member.guild.name}`})
+        wait(4);
+        welcome.send({content:`Welcome <@${member.id}>`,embeds:[welcomeEmbed]})
+    }
+    if(member.guild.id=='777417270263414805')
+    member.guild.channels.cache.get('997403531197812806').send(`Welcome <@${member.id}> !`)
 
     const ruolo=await db.get(`role-welcome-id_${member.guild.id}`)
     if(!ruolo) return;
     else member.roles.add(ruolo);
 });
 client.on('guildMemberRemove',async member=>{
-    const welcome=client.channels.cache.get(await db.get(`welcome_${member.guild.id}`))||client.channels.cache.find(c=>c.name.startsWith('welcome'));
-    if(!welcome) return;
-    const nowelcomeEmbed=new MessageEmbed()
-        .setColor('DARK_RED')
-        .setTitle('**Arrivederci!**')
-        .setAuthor({
-            name:member.guild.name,
-            iconURL:member.guild.iconURL()
-        })
-        .setDescription(`<@${member.id}>`)
-        .setFooter({text:`${member.guild.name}`})
-    wait(4);
-    welcome.send({embeds:[nowelcomeEmbed]})
+    if(member.guild.channels.cache.find(c=>c.id)==await db.get(`welcome_${member.guild.id}`)){
+        const welcome=client.channels.cache.get(await db.get(`welcome_${member.guild.id}`))||client.channels.cache.find(c=>c.name.startsWith('welcome'));
+        if(!welcome) return;
+        const nowelcomeEmbed=new MessageEmbed()
+            .setColor('DARK_RED')
+            .setTitle('**Arrivederci!**')
+            .setAuthor({
+                name:member.user.tag,
+                iconURL:member.user.displayAvatarURL()
+            })
+            .setDescription(`<@${member.id}> è **uscito/a** dal server!`)
+            .setFooter({text:`${member.guild.name}`})
+        wait(4);
+        welcome.send({embeds:[nowelcomeEmbed]})
+    }
 });
 
 //comandi slash
@@ -655,8 +643,9 @@ client.on('interactionCreate',async interaction=>{
     //controllo permessi
     if(comand.permissions){
         const permessiAutore=interaction.channel.permissionsFor(interaction.member);
-        if(interaction.user.tag!=config.botCreator||!permessiAutore||!permessiAutore.has(comand.permissions)){
-            return interaction.reply('Non puoi utilizzare questo comando',true);
+        if(interaction.user.tag==config.botCreator) ;
+        else if(!permessiAutore||!permessiAutore.has(comand.permissions)){
+            return interaction.reply({content:'Non puoi utilizzare questo comando',ephemeral:true});
         }
     }
 
@@ -784,7 +773,7 @@ client.on('messageCreate',message=>{
 
 //conteggio
 client.on('messageCreate',async message=>{
-    canaleCounting=await db.get(`counting_${message.guild.id}`)
+    canaleCounting=await db.get(`canale_counting_${message.guild.id}`)
     if(!canaleCounting) return;
 
     if(message.channel.id==canaleCounting){
@@ -796,19 +785,40 @@ client.on('messageCreate',async message=>{
                 iconURL:client.user.displayAvatarURL()
             })
 
-        if(typeof(parseInt(message.content))==='number'&&!message.author.bot){
-            if(parseInt(message.content)==await db.get('counting')+1&&message.author.id!=await db.get('counting_autore')){
-                message.react('✅')
-                await db.add('counting',1)
-                await db.set('counting_autore',message.author.id)
+        let i,num=0,numero=false
+        for(i=0;i<4;i++)
+            if(message.content.codePointAt(i)>47&&message.content.codePointAt(i)<58)
+                num++
+        if(num>0&&num<5) numero=true
+        
+        if(numero==true&&!message.author.bot){
+            if(parseInt(message.content)==await db.get(`counting_${message.guild.id}`)+1&&message.author.id!=await db.get(`counting_autore_${message.guild.id}`)){
+                if(parseInt(message.content)==1000){
+                    message.react('1️⃣')
+                    message.react('0️⃣')
+                    message.react('0️⃣')
+                    message.react('0️⃣')
+                }
+                else if(parseInt(message.content)==100) message.react('💯')
+                else message.react('✅')
+
+                if(await db.get(`max_counting_${message.guild.id}`)<await db.get(`counting_${message.guild.id}`)+1)
+                    await db.set(`max_counting_${message.guild.id}`,await db.get(`counting_${message.guild.id}`)+1)
+
+                await db.add(`counting_${message.guild.id}`,1)
+                await db.set(`counting_autore_${message.guild.id}`,message.author.id)
             } else{
                 message.react('❌')
                 message.channel.send({embeds:[embedCouter
-                    .setDescription(`Siamo arrivati al numero: ${await db.get('counting')}`)
+                    .setDescription(`Siamo arrivati al numero: ${await db.get(`counting_${message.guild.id}`)}`)
                     .addField('Hai sbagliato!!','**Si ricomincia...**')
                 ]})
-                await db.set('counting',0)
-                await db.set('counting_autore','')
+
+                if(await db.get(`max_counting_${message.guild.id}`)<await db.get(`counting_${message.guild.id}`))
+                    await db.set(`max_counting_${message.guild.id}`,await db.get(`counting_${message.guild.id}`))
+                    
+                await db.set(`counting_${message.guild.id}`,0)
+                await db.set(`counting_autore_${message.guild.id}`,'')
             }
         }
     }

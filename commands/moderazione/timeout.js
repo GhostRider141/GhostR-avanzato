@@ -4,7 +4,7 @@ const db=new QuickDB()
 
 module.exports={
     name:'timeout',
-    description:'Mette in pausa (timeout) un utente',
+    description:'Mette in pausa un utente',
     permissions:['MODERATE_MEMBERS'],
     cooldown:10,
     options:[

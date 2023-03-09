@@ -238,20 +238,6 @@ module.exports={
                 },
             ],
         },
-        
-        {
-            name: 'parole',
-            description: 'Blacklist delle parole',
-            type: 'SUB_COMMAND',
-            options:[
-                {
-                    name: 'parole',
-                    description: 'Specifica il canale',
-                    type: 'STRING',
-                },
-            ],
-        },
-        
         {
             name: 'role-benvenuto',
             description: 'configura il ruolo che da a chi è appena entrato nel server',
@@ -428,14 +414,6 @@ module.exports={
                 },
                 {
                     name:`\u200b`,
-                    value:`**Blacklist**`
-                },
-                {
-                    name:`\`${this.name} parole [parole]\`:`,
-                    value:`per configurare la blacklist delle parole`
-                },
-                {
-                    name:`\u200b`,
                     value:`**Ruoli**`
                 },
                 {
@@ -479,7 +457,7 @@ module.exports={
         let memmbri=await db.get(`membri_${interaction.guild.id}`)
         let bot=await db.get(`bot_${interaction.guild.id}`)
         let mod=await db.get(`mod_${interaction.guild.id}`)
-        let counting=await db.get(`counting_${interaction.guild.id}`)
+        let counting=await db.get(`canale_counting_${interaction.guild.id}`)
         let verifica=await db.get(`verifica_${interaction.guild.id}`)
         let newCV=await db.get(`newCV_${interaction.guild.id}`)
         let categoryNewCV=await db.get(`newCV-category_${interaction.guild.id}`)
@@ -640,7 +618,8 @@ module.exports={
         if(interaction.options.getSubcommand()==='counting') {
             var channelSet=interaction.options.getChannel('canale')
             if(!channelSet){
-                await db.delete(`counting_${interaction.guild.id}`)
+                await db.delete(`canale_counting_${interaction.guild.id}`)
+                db.set(`max_counting_${interaction.guild.id}`,0)
                 embedConfig.setDescription('Ho tirato via il canale del counting impostato')
                 interaction.reply({embeds:[embedConfig],components:[],ephemeral:true})
             } else{
@@ -649,23 +628,9 @@ module.exports={
                 if(!interaction.options) interaction.reply({embeds:[embedConfig.setDescription('Se vuoi cambiare il canale devi **menzionare il canale** o setterlo a **none**')],components:[],ephemeral:true})
                 //else if(!interaction.options===interaction.mentions.channels) interaction.reply({embeds:[embedConfig.setDescription('Per cambiare il canale devi **menzionare il canale**')],components:[],ephemeral:true})
 
-                counting=await db.set(`counting_${interaction.guild.id}`,newchannel)
+                counting=await db.set(`canale_counting_${interaction.guild.id}`,newchannel)
+                db.set(`max_counting_${interaction.guild.id}`,0)
                 interaction.reply({embeds:[embedConfig.setDescription(`Hai settato il canale di counting: <#${counting}>`)],components:[],ephemeral:true});
-            }
-        }
-        if(interaction.options.getSubcommand()==='parole') {
-            var channelSet=interaction.options.getChannel('canale')
-            if(!channelSet){
-                await db.delete(`blacklist_words_${interaction.guild.id}`)
-                embedConfig.setDescription('Ho tirato via le parole in blacklist')
-                interaction.reply({embeds:[embedConfig],components:[],ephemeral:true})
-            } else{
-                var Bwords=interaction.options.getString('parole')
-                if(!interaction.options) interaction.reply({embeds:[embedConfig.setDescription('Se vuoi cambiare il canale devi **menzionare il canale** o setterlo a **none**')],components:[],ephemeral:true})
-                //else if(!interaction.options===interaction.mentions.channels) interaction.reply({embeds:[embedConfig.setDescription('Per cambiare il canale devi **menzionare il canale**')],components:[],ephemeral:true})
-
-                words=await db.set(`blacklist_words_${interaction.guild.id}`,Bwords)
-                interaction.reply({embeds:[embedConfig.setDescription(`Hai messo nella blacklist delle parole: ${words}`)],components:[],ephemeral:true});
             }
         }
         if(interaction.options.getSubcommand()==='ticket') {

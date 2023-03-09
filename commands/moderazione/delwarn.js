@@ -4,7 +4,7 @@ const db=new QuickDB()
 
 module.exports={
     name:'delwarn',
-    description:'toglie un warn/avviso di un utente',
+    description:'toglie uno o più warn/avvisi di un utente',
     permissions:['MODERATE_MEMBERS'],
     cooldown:10,
     options:[
